@@ -3,17 +3,13 @@ const BASE_PROMPT_PREFIX = `Write me a love letter based on prompt below. Please
 
 const sendMessage = (content) => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    console.log(tabs);
-    console.log(content);
-
     const activeTab = tabs[0].id;
 
     chrome.tabs.sendMessage(
       activeTab,
       { message: "inject", content },
       (response) => {
-        console.log(response);
-        if (response.status === "failed") {
+        if (response?.status === "failed") {
           console.log("injection failed.");
         }
       }
@@ -77,9 +73,6 @@ const generateCompletionAction = async (info) => {
     const baseCompletion = await generate(
       `${BASE_PROMPT_PREFIX}${selectionText}`
     );
-
-    // Let's see what we get!
-    // console.log(baseCompletion.text);
 
     // Send the output when we're all done
     sendMessage(baseCompletion.text);
